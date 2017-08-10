@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        canvas {
+            background: #d7d7d7;
+        }
+
+    </style>
+</head>
+
+<body>
+    <canvas width="1000" height="600"></canvas>
+</body>
+
+</html>
+<script src="digit.js"></script>
+<script>
+    var can = document.querySelector('canvas');
+    var pen = can.getContext('2d');
+    var ball = [];
+    var col = function() {
+        return '#' + (Math.random() * 0xffffff << 0).toString(16);
+    }
+    var time;
+    var timeArr;
+
+    function balls(ball, x, y, arr, posX, posY) {
+
+        for (i = 0; i < arr.length; i++) {
+
+            for (j = 0; j < arr[i].length; j++) {
+                if (arr[i][j] == 1) {
+                    ball.push({
+                        x: j * x + posX,
+                        y: i * y + posY,
+                        r: 7,
+                        g: 2,
+                        v: 6 * Math.pow(-1, Math.ceil(Math.random() * 10)),
+                        c: col(),
+                        vx:8*Math.pow(-1, Math.ceil(Math.random() * 10)),
+//                        vx: Math.random() * 10 * Math.pow(-1, Math.ceil(Math.random() * 10)),
+                        st: 0
+                    })
+                }
+            }
+        }
+
+    }
+    var s2, os2;
+    setInterval(function(){
+	for(var d = 0; d < ball.length; d++){
+		if(ball[d].st == 0){
+			
+			ball[d].st = 1;
+			
+		}	
+	}
+},1000)	
+        
+    setInterval(function() {
+
+        var date = new Date();
+        var h = date.getHours().toString();
+        var m = date.getMinutes().toString();
+        var s = date.getSeconds().toString();
+        if (s.length == 1) {
+            s = '0' + s;
+        }
+        if (m.length == 1) {
+            m = '0' + m;
+        }
+        if (h.length == 1) {
+            h = '0' + h;
+        }
+        time = h + m + s;
+        if (!(h + m + s) == time) {
+            time = h + m + s;
+        }
+        timeArr = time.split('');
+//        s2 = timeArr[5];
+//        os1 = timeArr[4];
+//        s1 = timeArr[4];
+//        if (s2 != os2) {
+//            for (var k = 0; k < ball.length; k++) {
+//                if (ball[k].st == 0) {
+//
+//                    balls[k].st = 1;
+//
+//                }
+//            }
+//        }
+//        if (s1 != os1) {
+//            console.log('ok');
+//            ball.st = 1;
+//        } else {
+//            status = 0;
+//        }
+//        os1 = timeArr[4];
+        balls(ball, 15, 15, digit[timeArr[0]], 100, 100);
+        balls(ball, 15, 15, digit[timeArr[1]], 210, 100);
+        balls(ball, 15, 15, digit[10], 330, 100);
+        balls(ball, 15, 15, digit[timeArr[2]], 390, 100);
+        balls(ball, 15, 15, digit[timeArr[3]], 500, 100);
+        balls(ball, 15, 15, digit[10], 610, 100);
+        balls(ball, 15, 15, digit[timeArr[4]], 680, 100);
+        balls(ball, 15, 15, digit[timeArr[5]], 790, 100);
+
+    }, 1000)
+    
+    setInterval(function() {
+        pen.clearRect(0, 0, 1000, 600);
+        for (var k = 0; k < ball.length; k++) {
+            
+                pen.beginPath();
+                pen.fillStyle = ball[k].c;
+                pen.arc(ball[k].x, ball[k].y, ball[k].r, 0, Math.PI * 2);
+                pen.fill();
+                pen.closePath();
+            if (ball[k].st == 1) {
+                ball[k].v += ball[k].g;
+                ball[k].y += ball[k].v;
+                ball[k].x += ball[k].vx;
+                if (ball[k].y < 550 && ball[k].v < 0) {
+                    ball[k].v = 0.9 * ball[k].v;
+                } else if (ball[k].y > 590) {
+                    ball[k].y = 590;
+                    ball[k].v = -0.9 * ball[k].v
+                }
+                if (ball[k].x > 990) {
+                    ball.splice(k, 1);
+                } else if (ball[k].x < 10) {
+
+                    ball.splice(k, 1);
+                }
+            }
+        }
+
+
+    }, 1000 / 24)
+
+</script>

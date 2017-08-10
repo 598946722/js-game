@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+        /*
+        .bg{
+            width: 100%;
+            height: 100%;
+            background: url(bg.jpg)no-repeat center;
+        }
+*/
+
+        canvas {
+            background: url(bg.jpg)no-repeat center;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas width="1024px" height="635px"></canvas>
+</body>
+
+</html>
+<script src="public.js"></script>
+<script>
+    var arr = ['coin.png', 'fish.png', 'gun.png', 'bullet.png'];
+    var s = 0;
+    var t = 0;
+//    var k;
+    var gun = {
+        x: 475,
+        y: 560,
+        s: 10
+    }
+    var bullet = [];
+    var fishs = [];
+    setInterval(function() {
+        fishs.push({
+            x: -172,
+            y: Math.random() * 400,
+            s: Math.random() * 10,
+            i: 0,
+            r:Math.PI/180*Math.ceil(Math.random()*60-20)
+        })
+    }, 2500)
+//t++;
+//{
+//   if(t == 8){
+//       t = 0
+//   }
+//}
+    lazyLoad(arr, function(data) {
+        setInterval(function() {
+            pen.clearRect(0, 0, 1024, 635);
+            for (var j = 0; j < fishs.length; j++) {
+                if (fishs.x > 1024) {
+                    fishs.splice(j, 1)
+                }
+                pen.rotate(fishs[j].r);
+                fishs[j].i++;
+                if (fishs[j].i == 8) {
+                    fishs[j].i = 0;
+                }
+                if (fishs[j].s > 2) {
+                    pen.drawImage(data.fish, 0, fishs[j].i * 126, 174, 126, fishs[j].x += fishs[j].s, fishs[j].y, 174, 126);
+                }
+                pen.rotate(-fishs[j].r);
+
+            }
+             
+            for (var k = 0; k < bullet.length; k++) {
+                pen.drawImage(data.bullet, bullet[k].x, bullet[k].y -= bullet[k].s, 24, 26);
+                for (var a = 0; a < fishs.length; a++) {
+                    if (touch(bullet[k].x, bullet[k].y, 24, 26, fishs[a].x, fishs[a].y, 84, 80)) {
+                        fishs.splice(a, 1);
+                        bullet.splice(k, 1);
+                       pen.drawImage(data.coin,0,60,60,60,bullet[k].x,fishs[a].y,60,60)
+                    }
+                }
+            }
+ pen.drawImage(data.gun, 0, q*74, 74, 68, gun.x, gun.y, 74, 68);
+           
+
+        }, 1000 / 24);
+        var q = 0;
+    
+        window.onkeydown = function(e) {
+            switch (e.keyCode) {
+                case 37:
+                    gun.x -= gun.s;
+                    break;
+                case 39:
+                    gun.x += gun.s;
+                    break;
+                case 32:
+                    bullet.push({
+                        x: gun.x + 26,
+                        y: gun.y + 5,
+                        s: 5
+                    });
+                    if(q < 4){
+                        q ++;
+                        }else{
+                            q = 0;
+                        }
+                    
+                    break;
+            }
+        }
+
+    })
+
+</script>
